@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conversation_Abandoned_At__c</fullName>
+    <label>Conversation Abandoned At</label>
+    <description>Timestamp when the customer dropped off mid-booking conversation without completing the OTP verification or booking confirmation. Used by the Abandoned Conversation Recovery scheduled Flow to send a WhatsApp re-engagement nudge after 1 hour.</description>
+    <type>DateTime</type>
+    <required>false</required>
+    <externalId>false</externalId>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Vehicle_Definition__c</fullName>
+    <label>Vehicle Definition</label>
+    <description>Lookup to the VehicleDefinition record for the car model the customer wants to test drive. Set during CreateTestDriveBooking Flow based on the model selected in the Agentforce conversation.</description>
+    <type>Lookup</type>
+    <referenceTo>VehicleDefinition</referenceTo>
+    <relationshipLabel>Test Drives</relationshipLabel>
+    <relationshipName>Test_Drives</relationshipName>
+    <required>false</required>
+    <externalId>false</externalId>
+</CustomField>

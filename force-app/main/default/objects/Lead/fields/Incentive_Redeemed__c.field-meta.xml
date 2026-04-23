@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Incentive_Redeemed__c</fullName>
+    <label>Incentive Redeemed</label>
+    <description>Set to true by the dealership when the customer physically arrives and redeems the incentive (e.g., accessories kit). Together with Incentive_Offered__c, enables the marketing team to measure incentive redemption rates and conversion lift.</description>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+</CustomField>

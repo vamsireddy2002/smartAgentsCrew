@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cancellation_Reason__c</fullName>
+    <label>Cancellation Reason</label>
+    <description>Captures the reason provided by the customer when cancelling a test drive booking via the Agentforce WhatsApp agent. Used for analytics and dealer reporting.</description>
+    <type>Picklist</type>
+    <externalId>false</externalId>
+    <required>false</required>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Customer Request</fullName>
+                <default>false</default>
+                <label>Customer Request</label>
+            </value>
+            <value>
+                <fullName>Schedule Conflict</fullName>
+                <default>false</default>
+                <label>Schedule Conflict</label>
+            </value>
+            <value>
+                <fullName>Found Another Dealership</fullName>
+                <default>false</default>
+                <label>Found Another Dealership</label>
+            </value>
+            <value>
+                <fullName>Vehicle No Longer Available</fullName>
+                <default>false</default>
+                <label>Vehicle No Longer Available</label>
+            </value>
+            <value>
+                <fullName>Purchased Another Vehicle</fullName>
+                <default>false</default>
+                <label>Purchased Another Vehicle</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

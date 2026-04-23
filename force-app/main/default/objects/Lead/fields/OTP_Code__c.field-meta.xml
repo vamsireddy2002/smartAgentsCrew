@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OTP_Code__c</fullName>
+    <label>OTP Code</label>
+    <description>Stores the current one-time password generated for this lead. Cleared (set to null) immediately after successful verification. Never exposed in agent conversation logs.</description>
+    <type>Text</type>
+    <length>6</length>
+    <required>false</required>
+    <unique>false</unique>
+    <externalId>false</externalId>
+</CustomField>

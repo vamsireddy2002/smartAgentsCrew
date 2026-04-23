@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OTP_Attempt_Count__c</fullName>
+    <label>OTP Attempt Count</label>
+    <description>Tracks the number of consecutive failed OTP validation attempts for this lead. Reset to 0 when a new OTP is generated. The ValidateOTP Flow locks verification when this value reaches 3, preventing brute-force attacks.</description>
+    <type>Number</type>
+    <precision>2</precision>
+    <scale>0</scale>
+    <required>false</required>
+    <unique>false</unique>
+    <externalId>false</externalId>
+    <defaultValue>0</defaultValue>
+</CustomField>
