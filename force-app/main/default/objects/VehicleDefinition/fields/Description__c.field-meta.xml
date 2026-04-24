@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Description__c</fullName>
+    <label>AI Description</label>
+    <description>A concise, customer-friendly description of this vehicle model written for the Agentforce agent to read back in natural language. The RecommendVehicle Flow returns this field value and the Einstein LLM uses it to explain why the model was recommended. Example: "The Electra SUV 2025 offers a 400-mile range, seats 7 comfortably, and leads the lineup in cargo capacity — perfect for family road trips."</description>
+    <type>LongTextArea</type>
+    <length>1000</length>
+    <visibleLines>4</visibleLines>
+    <externalId>false</externalId>
+</CustomField>

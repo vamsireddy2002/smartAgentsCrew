@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primary_Feature__c</fullName>
+    <label>Primary Feature</label>
+    <description>The standout feature that best describes this vehicle model. Used by the RecommendVehicle Flow to match against the customer's Quiz Question 3 answer (what matters most to them). This is the single most important selling point used in the AI scoring algorithm.</description>
+    <type>Picklist</type>
+    <required>false</required>
+    <externalId>false</externalId>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Range</fullName>
+                <default>false</default>
+                <label>Range</label>
+            </value>
+            <value>
+                <fullName>Cargo Space</fullName>
+                <default>false</default>
+                <label>Cargo Space</label>
+            </value>
+            <value>
+                <fullName>Tech and Comfort</fullName>
+                <default>false</default>
+                <label>Tech and Comfort</label>
+            </value>
+            <value>
+                <fullName>Performance</fullName>
+                <default>false</default>
+                <label>Performance</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

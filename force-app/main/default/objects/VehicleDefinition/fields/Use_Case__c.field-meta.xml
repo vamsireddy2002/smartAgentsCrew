@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Case__c</fullName>
+    <label>Use Case</label>
+    <description>Tags the vehicle model with its primary use case for AI Vehicle Matchmaker scoring. The RecommendVehicle Flow matches this picklist value against the customer's Quiz Question 1 answer (how they use their car). Each model should have exactly one primary use case selected.</description>
+    <type>Picklist</type>
+    <required>false</required>
+    <externalId>false</externalId>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Daily City Commute</fullName>
+                <default>false</default>
+                <label>Daily City Commute</label>
+            </value>
+            <value>
+                <fullName>Family Road Trips</fullName>
+                <default>false</default>
+                <label>Family Road Trips</label>
+            </value>
+            <value>
+                <fullName>Weekend Adventure</fullName>
+                <default>false</default>
+                <label>Weekend Adventure</label>
+            </value>
+            <value>
+                <fullName>Business Travel</fullName>
+                <default>false</default>
+                <label>Business Travel</label>
+            </value>
+            <value>
+                <fullName>All Purpose</fullName>
+                <default>false</default>
+                <label>All Purpose</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
