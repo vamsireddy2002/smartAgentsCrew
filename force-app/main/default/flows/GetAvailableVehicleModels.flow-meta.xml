@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>A1 — Returns all active Electra vehicle models for the agent to present to customers.</description>
+    <interviewLabel>GetAvailableVehicleModels {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>GetAvailableVehicleModels</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value><stringValue>LightningFlowBuilder</stringValue></value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <assignments>
+        <name>Assign_Vehicle_List</name>
+        <label>Assign Vehicle List to Output</label>
+        <locationX>176</locationX>
+        <locationY>408</locationY>
+        <assignmentItems>
+            <assignToReference>vehicleList</assignToReference>
+            <operator>Assign</operator>
+            <value><elementReference>Get_Active_Vehicle_Models</elementReference></value>
+        </assignmentItems>
+    </assignments>
+    <recordLookups>
+        <name>Get_Active_Vehicle_Models</name>
+        <label>Get All Vehicle Models</label>
+        <locationX>176</locationX>
+        <locationY>288</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Assign_Vehicle_List</targetReference>
+        </connector>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>VehicleDefinition</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Use_Case__c</queriedFields>
+        <queriedFields>Seating_Capacity__c</queriedFields>
+        <queriedFields>Primary_Feature__c</queriedFields>
+        <queriedFields>Description__c</queriedFields>
+        <sortField>Name</sortField>
+        <sortOrder>Asc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Active_Vehicle_Models</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>vehicleList</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <objectType>VehicleDefinition</objectType>
+    </variables>
+</Flow>

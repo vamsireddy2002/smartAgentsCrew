@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>A9 — Reschedules an existing TestDrive__c booking to a new date. Archives the old date in Previous_Test_Drive_Date__c, increments Reschedule_Count__c, notifies the dealer via Task, and sends a WhatsApp rescheduled confirmation to the customer.</description>
+    <interviewLabel>RescheduleTestDrive {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>RescheduleTestDrive</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value><stringValue>LightningFlowBuilder</stringValue></value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+
+    <!-- ═══ STEP 1: Get current TestDrive record (to capture old date + count) ═══ -->
+    <recordLookups>
+        <name>Get_Current_Test_Drive</name>
+        <label>Get Current TestDrive Details</label>
+        <locationX>176</locationX>
+        <locationY>168</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Update_Test_Drive_Schedule</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value><elementReference>testDriveId</elementReference></value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>TestDrive__c</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Test_Drive_Date__c</queriedFields>
+        <queriedFields>Reschedule_Count__c</queriedFields>
+        <queriedFields>Dealer__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+
+    <!-- ═══ STEP 2: Update TestDrive — new date, archive old, increment count ═══ -->
+    <recordUpdates>
+        <name>Update_Test_Drive_Schedule</name>
+        <label>Update TestDrive with New Schedule</label>
+        <locationX>176</locationX>
+        <locationY>288</locationY>
+        <connector>
+            <targetReference>Create_Reschedule_Task</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value><elementReference>testDriveId</elementReference></value>
+        </filters>
+        <inputAssignments>
+            <field>Previous_Test_Drive_Date__c</field>
+            <value><elementReference>Get_Current_Test_Drive.Test_Drive_Date__c</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Test_Drive_Date__c</field>
+            <value><elementReference>newTestDriveDate</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Reschedule_Count__c</field>
+            <value><elementReference>newRescheduleCount</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value><stringValue>Scheduled</stringValue></value>
+        </inputAssignments>
+        <object>TestDrive__c</object>
+    </recordUpdates>
+
+    <!-- ═══ STEP 3: Create dealer notification Task ═══ -->
+    <recordCreates>
+        <name>Create_Reschedule_Task</name>
+        <label>Create Dealer Reschedule Task</label>
+        <locationX>176</locationX>
+        <locationY>408</locationY>
+        <connector>
+            <targetReference>Send_Reschedule_WhatsApp</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Subject</field>
+            <value><stringValue>Test Drive Rescheduled — Please Update Calendar</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value><elementReference>dealerAccountId</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value><elementReference>newTestDriveDate</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value><stringValue>Not Started</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value><stringValue>Normal</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value><elementReference>rescheduleTaskDescription</elementReference></value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+
+    <!-- ═══ STEP 4: Send WhatsApp reschedule confirmation ═══ -->
+    <subflows>
+        <name>Send_Reschedule_WhatsApp</name>
+        <label>Send Reschedule WhatsApp Confirmation</label>
+        <locationX>176</locationX>
+        <locationY>528</locationY>
+        <flowName>SendWhatsAppMessage</flowName>
+        <inputAssignments>
+            <name>phone</name>
+            <value><elementReference>phone</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>templateName</name>
+            <value><stringValue>RescheduleConfirmation</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>param1</name>
+            <value><elementReference>customerName</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>param2</name>
+            <value><elementReference>vehicleModel</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>param3</name>
+            <value><elementReference>newDateText</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>param4</name>
+            <value><elementReference>dealerName</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>param5</name>
+            <value><elementReference>confirmationNumber</elementReference></value>
+        </inputAssignments>
+    </subflows>
+
+    <!-- ═══ FORMULA: New reschedule count = old count + 1 ═══ -->
+    <formulas>
+        <name>newRescheduleCount</name>
+        <dataType>Number</dataType>
+        <expression>IF(ISNULL({!Get_Current_Test_Drive.Reschedule_Count__c}), 1, {!Get_Current_Test_Drive.Reschedule_Count__c} + 1)</expression>
+        <scale>0</scale>
+    </formulas>
+
+    <!-- ═══ FORMULA: Format new date as text for WhatsApp ═══ -->
+    <formulas>
+        <name>newDateText</name>
+        <dataType>String</dataType>
+        <expression>TEXT({!newTestDriveDate})</expression>
+    </formulas>
+
+    <!-- ═══ FORMULA: Task description ═══ -->
+    <formulas>
+        <name>rescheduleTaskDescription</name>
+        <dataType>String</dataType>
+        <expression>"Booking " &amp; {!confirmationNumber} &amp; " rescheduled. New date: " &amp; TEXT({!newTestDriveDate}) &amp; ". Reschedule #" &amp; TEXT({!newRescheduleCount}) &amp; ". Vehicle: " &amp; {!vehicleModel}</expression>
+    </formulas>
+
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Current_Test_Drive</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+
+    <!-- ═══ INPUT VARIABLES ═══ -->
+    <variables>
+        <name>testDriveId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>newTestDriveDate</name>
+        <dataType>DateTime</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>phone</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>customerName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>vehicleModel</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>dealerName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>dealerAccountId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>confirmationNumber</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>A5 — Generates a cryptographically secure 6-digit OTP using the OTPGenerator Apex class, saves it on the Lead record with a 5-minute expiry, then sends it to the customer via WhatsApp.</description>
+    <interviewLabel>GenerateAndSendOTP {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>GenerateAndSendOTP</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value><stringValue>LightningFlowBuilder</stringValue></value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+
+    <!-- ═══ STEP 1: Call OTPGenerator Apex InvocableMethod ═══ -->
+    <actionCalls>
+        <name>Generate_OTP_Code</name>
+        <label>Generate Secure OTP Code</label>
+        <locationX>176</locationX>
+        <locationY>168</locationY>
+        <actionName>OTPGenerator</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Save_OTP_On_Lead</targetReference>
+        </connector>
+        <inputParameters>
+            <name>leadId</name>
+            <value><elementReference>leadId</elementReference></value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>generatedOtp</assignToReference>
+            <name>otpCode</name>
+        </outputParameters>
+    </actionCalls>
+
+    <!-- ═══ STEP 2: Save OTP on Lead (with 5-minute expiry via formula) ═══ -->
+    <recordUpdates>
+        <name>Save_OTP_On_Lead</name>
+        <label>Save OTP Fields on Lead</label>
+        <locationX>176</locationX>
+        <locationY>288</locationY>
+        <connector>
+            <targetReference>Send_OTP_Via_WhatsApp</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value><elementReference>leadId</elementReference></value>
+        </filters>
+        <inputAssignments>
+            <field>OTP_Code__c</field>
+            <value><elementReference>generatedOtp</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OTP_Expiry__c</field>
+            <value><elementReference>otpExpiryTime</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OTP_Verified__c</field>
+            <value><booleanValue>false</booleanValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OTP_Attempt_Count__c</field>
+            <value><numberValue>0.0</numberValue></value>
+        </inputAssignments>
+        <object>Lead</object>
+    </recordUpdates>
+
+    <!-- ═══ STEP 3: Send OTP via WhatsApp (subflow to SendWhatsAppMessage) ═══ -->
+    <subflows>
+        <name>Send_OTP_Via_WhatsApp</name>
+        <label>Send OTP via WhatsApp</label>
+        <locationX>176</locationX>
+        <locationY>408</locationY>
+        <connector>
+            <targetReference>Set_Success_True</targetReference>
+        </connector>
+        <flowName>SendWhatsAppMessage</flowName>
+        <inputAssignments>
+            <name>phone</name>
+            <value><elementReference>phone</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>templateName</name>
+            <value><stringValue>OTPVerification</stringValue></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>param1</name>
+            <value><elementReference>generatedOtp</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>param2</name>
+            <value><stringValue>5</stringValue></value>
+        </inputAssignments>
+    </subflows>
+
+    <!-- ═══ STEP 4: Mark as success ═══ -->
+    <assignments>
+        <name>Set_Success_True</name>
+        <label>Set Success = True</label>
+        <locationX>176</locationX>
+        <locationY>528</locationY>
+        <assignmentItems>
+            <assignToReference>success</assignToReference>
+            <operator>Assign</operator>
+            <value><booleanValue>true</booleanValue></value>
+        </assignmentItems>
+    </assignments>
+
+    <!-- ═══ FORMULA: OTP Expiry = NOW + 5 minutes (5/1440 of a day) ═══ -->
+    <formulas>
+        <name>otpExpiryTime</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW() + (5/1440)</expression>
+    </formulas>
+
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Generate_OTP_Code</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+
+    <!-- ═══ INPUT VARIABLES ═══ -->
+    <variables>
+        <name>leadId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>phone</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>customerName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+
+    <!-- ═══ LOCAL VARIABLES ═══ -->
+    <variables>
+        <name>generatedOtp</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+
+    <!-- ═══ OUTPUT VARIABLES ═══ -->
+    <variables>
+        <name>success</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <value><booleanValue>false</booleanValue></value>
+    </variables>
+</Flow>
