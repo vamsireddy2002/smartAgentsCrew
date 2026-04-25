@@ -50,6 +50,13 @@
     </start>
     <status>Active</status>
     <variables>
+        <name>requestContext</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <name>vehicleList</name>
         <dataType>SObject</dataType>
         <isCollection>true</isCollection>
