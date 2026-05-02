@@ -1,29 +1,26 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
-    <description>A3 â€” Creates or updates a Lead and creates a TestDrive__c booking record. Also creates a Task notification for the dealer.</description>
-    <interviewLabel>CreateTestDriveBooking {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>CreateTestDriveBooking</label>
-    <processMetadataValues>
-        <name>BuilderType</name>
-        <value><stringValue>LightningFlowBuilder</stringValue></value>
-    </processMetadataValues>
-    <processType>AutoLaunchedFlow</processType>
-
-    <!-- ALL assignments grouped -->
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
-        <name>Set_Lead_Id_From_New</name>
-        <label>Set Lead ID from New Lead</label>
-        <locationX>440</locationX>
-        <locationY>528</locationY>
+        <name>Assign_Booking_Outputs</name>
+        <label>Assign Booking Output Variables</label>
+        <locationX>176</locationX>
+        <locationY>888</locationY>
         <assignmentItems>
-            <assignToReference>leadId</assignToReference>
+            <assignToReference>testDriveId</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Create_New_Lead</elementReference></value>
+            <value>
+                <elementReference>Create_Test_Drive_Record</elementReference>
+            </value>
         </assignmentItems>
-        <connector>
-            <targetReference>Create_Test_Drive_Record</targetReference>
-        </connector>
+        <assignmentItems>
+            <assignToReference>outputLeadId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>leadId</elementReference>
+            </value>
+        </assignmentItems>
     </assignments>
     <assignments>
         <name>Set_Lead_Id_From_Existing</name>
@@ -33,30 +30,30 @@
         <assignmentItems>
             <assignToReference>leadId</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Check_Existing_Lead.Id</elementReference></value>
+            <value>
+                <elementReference>Check_Existing_Lead.Id</elementReference>
+            </value>
         </assignmentItems>
         <connector>
             <targetReference>Create_Test_Drive_Record</targetReference>
         </connector>
     </assignments>
     <assignments>
-        <name>Assign_Booking_Outputs</name>
-        <label>Assign Booking Output Variables</label>
-        <locationX>176</locationX>
-        <locationY>888</locationY>
+        <name>Set_Lead_Id_From_New</name>
+        <label>Set Lead ID from New Lead</label>
+        <locationX>440</locationX>
+        <locationY>528</locationY>
         <assignmentItems>
-            <assignToReference>testDriveId</assignToReference>
+            <assignToReference>leadId</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Create_Test_Drive_Record</elementReference></value>
+            <value>
+                <elementReference>Create_New_Lead</elementReference>
+            </value>
         </assignmentItems>
-        <assignmentItems>
-            <assignToReference>outputLeadId</assignToReference>
-            <operator>Assign</operator>
-            <value><elementReference>leadId</elementReference></value>
-        </assignmentItems>
+        <connector>
+            <targetReference>Create_Test_Drive_Record</targetReference>
+        </connector>
     </assignments>
-
-    <!-- ALL decisions grouped -->
     <decisions>
         <name>Does_Lead_Exist</name>
         <label>Does Lead Already Exist?</label>
@@ -72,7 +69,9 @@
             <conditions>
                 <leftValueReference>Check_Existing_Lead.Id</leftValueReference>
                 <operator>IsNull</operator>
-                <rightValue><booleanValue>false</booleanValue></rightValue>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
             </conditions>
             <connector>
                 <targetReference>Update_Existing_Lead</targetReference>
@@ -80,15 +79,68 @@
             <label>Yes â€” Lead Exists</label>
         </rules>
     </decisions>
-
-    <!-- ALL formulas grouped -->
+    <description>A3 â€” Creates or updates a Lead and creates a TestDrive__c booking record. Also creates a Task notification for the dealer.</description>
     <formulas>
         <name>bookingTaskDescription</name>
         <dataType>String</dataType>
-        <expression>&quot;Customer: &quot; &amp; {!firstName} &amp; &quot; &quot; &amp; {!lastName} &amp; &quot; | Phone: &quot; &amp; {!phone} &amp; &quot; | Vehicle ID: &quot; &amp; {!vehicleDefinitionId}</expression>
+        <expression>&quot;Customer: &quot; &amp; {!firstName} &amp; &quot; &quot; &amp; {!lastName} &amp; &quot; | Phone: &quot; &amp; {!phone} &amp; &quot; | Vehicle: &quot; &amp; {!vehicleModel}</expression>
     </formulas>
-
-    <!-- ALL recordCreates grouped -->
+    <interviewLabel>CreateTestDriveBooking {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>CreateTestDriveBooking</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Create_Dealer_Task</name>
+        <label>Create Dealer Notification Task</label>
+        <locationX>176</locationX>
+        <locationY>768</locationY>
+        <connector>
+            <targetReference>Assign_Booking_Outputs</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>preferredDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <elementReference>bookingTaskDescription</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <stringValue>New Test Drive Booked â€” Action Required</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>dealerAccountId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
     <recordCreates>
         <name>Create_New_Lead</name>
         <label>Create New Lead</label>
@@ -98,36 +150,58 @@
             <targetReference>Set_Lead_Id_From_New</targetReference>
         </connector>
         <inputAssignments>
-            <field>FirstName</field>
-            <value><elementReference>firstName</elementReference></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>LastName</field>
-            <value><elementReference>lastName</elementReference></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Phone</field>
-            <value><elementReference>phone</elementReference></value>
+            <field>Company</field>
+            <value>
+                <stringValue>Self</stringValue>
+            </value>
         </inputAssignments>
         <inputAssignments>
             <field>Customer_Zip_Code__c</field>
-            <value><elementReference>zipCode</elementReference></value>
+            <value>
+                <elementReference>zipCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Email</field>
+            <value>
+                <elementReference>email</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>FirstName</field>
+            <value>
+                <elementReference>firstName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LastName</field>
+            <value>
+                <elementReference>lastName</elementReference>
+            </value>
         </inputAssignments>
         <inputAssignments>
             <field>LeadSource</field>
-            <value><stringValue>Agentforce WhatsApp</stringValue></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>WhatsApp_Opt_In__c</field>
-            <value><booleanValue>true</booleanValue></value>
+            <value>
+                <stringValue>Agentforce WhatsApp</stringValue>
+            </value>
         </inputAssignments>
         <inputAssignments>
             <field>OTP_Verified__c</field>
-            <value><booleanValue>true</booleanValue></value>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
         </inputAssignments>
         <inputAssignments>
-            <field>Company</field>
-            <value><stringValue>Self</stringValue></value>
+            <field>Phone</field>
+            <value>
+                <elementReference>phone</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatsApp_Opt_In__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
         </inputAssignments>
         <object>Lead</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
@@ -141,65 +215,38 @@
             <targetReference>Create_Dealer_Task</targetReference>
         </connector>
         <inputAssignments>
-            <field>Lead__c</field>
-            <value><elementReference>leadId</elementReference></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Vehicle_Definition__c</field>
-            <value><elementReference>vehicleDefinitionId</elementReference></value>
-        </inputAssignments>
-        <inputAssignments>
             <field>Dealer__c</field>
-            <value><elementReference>dealerAccountId</elementReference></value>
+            <value>
+                <elementReference>dealerAccountId</elementReference>
+            </value>
         </inputAssignments>
         <inputAssignments>
-            <field>Test_Drive_Date__c</field>
-            <value><elementReference>preferredDateTime</elementReference></value>
+            <field>Lead__c</field>
+            <value>
+                <elementReference>leadId</elementReference>
+            </value>
         </inputAssignments>
         <inputAssignments>
             <field>Status__c</field>
-            <value><stringValue>Scheduled</stringValue></value>
+            <value>
+                <stringValue>Scheduled</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Test_Drive_Date__c</field>
+            <value>
+                <elementReference>preferredDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Vehicle_Definition__c</field>
+            <value>
+                <elementReference>Lookup_Vehicle.Id</elementReference>
+            </value>
         </inputAssignments>
         <object>TestDrive__c</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
-    <recordCreates>
-        <name>Create_Dealer_Task</name>
-        <label>Create Dealer Notification Task</label>
-        <locationX>176</locationX>
-        <locationY>768</locationY>
-        <connector>
-            <targetReference>Assign_Booking_Outputs</targetReference>
-        </connector>
-        <inputAssignments>
-            <field>Subject</field>
-            <value><stringValue>New Test Drive Booked â€” Action Required</stringValue></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>WhatId</field>
-            <value><elementReference>dealerAccountId</elementReference></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>ActivityDate</field>
-            <value><elementReference>preferredDateTime</elementReference></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Status</field>
-            <value><stringValue>Not Started</stringValue></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Priority</field>
-            <value><stringValue>High</stringValue></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Description</field>
-            <value><elementReference>bookingTaskDescription</elementReference></value>
-        </inputAssignments>
-        <object>Task</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordCreates>
-
-    <!-- ALL recordLookups grouped -->
     <recordLookups>
         <name>Check_Existing_Lead</name>
         <label>Check if Lead Already Exists</label>
@@ -213,7 +260,9 @@
         <filters>
             <field>Phone</field>
             <operator>EqualTo</operator>
-            <value><elementReference>phone</elementReference></value>
+            <value>
+                <elementReference>phone</elementReference>
+            </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>Lead</object>
@@ -223,8 +272,29 @@
         <queriedFields>Phone</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
-
-    <!-- ALL recordUpdates grouped -->
+    <recordLookups>
+        <name>Lookup_Vehicle</name>
+        <label>Lookup VehicleDefinition by Model Name</label>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_Existing_Lead</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>vehicleModel</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>VehicleDefinition</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <recordUpdates>
         <name>Update_Existing_Lead</name>
         <label>Update Existing Lead</label>
@@ -237,32 +307,59 @@
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
-            <value><elementReference>Check_Existing_Lead.Id</elementReference></value>
+            <value>
+                <elementReference>Check_Existing_Lead.Id</elementReference>
+            </value>
         </filters>
         <inputAssignments>
+            <field>Customer_Zip_Code__c</field>
+            <value>
+                <elementReference>zipCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Email</field>
+            <value>
+                <elementReference>email</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>OTP_Verified__c</field>
-            <value><booleanValue>true</booleanValue></value>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
         </inputAssignments>
         <inputAssignments>
             <field>WhatsApp_Opt_In__c</field>
-            <value><booleanValue>true</booleanValue></value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Customer_Zip_Code__c</field>
-            <value><elementReference>zipCode</elementReference></value>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
         </inputAssignments>
         <object>Lead</object>
     </recordUpdates>
-
     <start>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Check_Existing_Lead</targetReference>
+            <targetReference>Lookup_Vehicle</targetReference>
         </connector>
     </start>
-    <status>Active</status>
-
+    <status>Obsolete</status>
+    <variables>
+        <name>dealerAccountId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>The customer&apos;s email address. Use lowercase variable name &apos;email&apos; (not &apos;Email&apos;).</description>
+        <name>email</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>firstName</name>
         <dataType>String</dataType>
@@ -278,14 +375,21 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>phone</name>
+        <name>leadId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
-        <isInput>true</isInput>
+        <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>vehicleDefinitionId</name>
+        <name>outputLeadId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>phone</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
@@ -299,27 +403,6 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>zipCode</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>true</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>dealerAccountId</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>true</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>leadId</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
         <name>testDriveId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -327,10 +410,18 @@
         <isOutput>true</isOutput>
     </variables>
     <variables>
-        <name>outputLeadId</name>
+        <description>The customer-facing name of the vehicle, exactly as returned by the GetAvailableVehicleModels action (e.g. &quot;Electra X1&quot;, &quot;Electra Coupe&quot;, &quot;Electra SUV&quot;). Do NOT pass a Salesforce record ID, ID-shaped string, or anything else here. Pass only the human-readable model name.</description>
+        <name>vehicleModel</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>true</isOutput>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>zipCode</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
     </variables>
 </Flow>
