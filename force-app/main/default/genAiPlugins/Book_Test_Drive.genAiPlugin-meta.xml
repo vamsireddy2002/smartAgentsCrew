@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>Assist customers in scheduling, booking, or arranging a test drive for a vehicle. This includes handling inquiries related to test drive availability, vehicle selection, dealership finding, slot selection, and finalizing reservations.</description>
+    <developerName>Book_Test_Drive</developerName>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>runtime_appointmentbooking__GetAvailableSlot</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>SvcCopilotTmpl__FinalizeReservation</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>Greet warmly and ask which vehicle they are interested in. If they are unsure, ask about their preferences (SUV vs Sedan, range needs, family size, budget) and use Get Vehicle Catalog to recommend models.</description>
+        <developerName>instruction_0_1775896461586</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0_1775896461586</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Collect their name and email (phone is optional).</description>
+        <developerName>instruction_1_1775896461592</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1_1775896461592</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Once a vehicle is selected, ask for their zip code to find the nearest dealership.</description>
+        <developerName>instruction_2_1775896461592</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2_1775896461592</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Use Find Nearest Dealership to locate the closest dealership and show available slots.</description>
+        <developerName>instruction_3_1775896461592</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_3_1775896461592</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Let them pick a date and time. Use runtime_appointmentbooking__GetAvailableSlot or Check Slot Availability to confirm.</description>
+        <developerName>instruction_4_1775896461592</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_4_1775896461592</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Summarize all details and ask for confirmation.</description>
+        <developerName>instruction_5_1775896461592</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_5_1775896461592</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Use Create Test Drive Booking or SvcCopilotTmpl__FinalizeReservation to finalize the booking.</description>
+        <developerName>instruction_6_1775896461592</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_6_1775896461592</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Use Send Test Drive Confirmation to email the details.</description>
+        <developerName>instruction_7_1775896461592</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_7_1775896461592</masterLabel>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <masterLabel>Book Test Drive</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>This topic handles the complete test drive booking process, including vehicle selection, dealership finding, slot selection, booking creation, and finalizing reservations. It does not handle rescheduling or cancellations.</scope>
+</GenAiPlugin>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is chosen when a customer requests to schedule a test drive for a vehicle.</description>
+    <developerName>p_16jbm000001MP5d_Test_Drive_Booking</developerName>
+    <genAiFunctions>
+        <functionName>runtime_appointmentbooking__GetAvailableSlot</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>SvcCopilotTmpl__FinalizeReservation</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the customer requests to book a test drive, use runtime_appointmentbooking__GetAvailableSlot to retrieve available slots.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Once the customer selects a time slot, use SvcCopilotTmpl__FinalizeReservation to confirm the booking.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <masterLabel>Test Drive Booking</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only handle tasks related to scheduling test drive appointments for customers. This includes providing available time slots and finalizing reservations. You cannot assist with rescheduling or cancellations.</scope>
+</GenAiPlugin>

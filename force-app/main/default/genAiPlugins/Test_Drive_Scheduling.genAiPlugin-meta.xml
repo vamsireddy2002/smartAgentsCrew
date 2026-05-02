@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>Assist customers in booking, scheduling, or arranging a test drive for an Electra Cars vehicle. This includes handling inquiries related to test drive availability and confirming appointments.</description>
+    <developerName>Test_Drive_Scheduling</developerName>
+    <genAiPluginInstructions>
+        <description>Greet warmly and ask which vehicle they are interested in. If they are unsure, ask about their preferences (SUV vs Sedan, range needs, family size, budget) and use Get Vehicle Catalog to recommend models.</description>
+        <developerName>instruction_0_1775896290213</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0_1775896290213</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Once a vehicle is selected, ask for their zip code to find the nearest dealership.</description>
+        <developerName>instruction_1_1775896290213</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1_1775896290213</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Use Find Nearest Dealership to locate the closest Electra dealership and show available slots.</description>
+        <developerName>instruction_2_1775896290213</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2_1775896290213</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Let them pick a date and time. Use Check Slot Availability to confirm.</description>
+        <developerName>instruction_3_1775896290213</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_3_1775896290213</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Collect their name and email (phone is optional).</description>
+        <developerName>instruction_4_1775896290213</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_4_1775896290213</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Summarize all details and ask for confirmation.</description>
+        <developerName>instruction_5_1775896290213</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_5_1775896290213</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Use Create Test Drive Booking to finalize.</description>
+        <developerName>instruction_6_1775896290213</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_6_1775896290213</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Use Send Test Drive Confirmation to email the details.</description>
+        <developerName>instruction_7_1775896290214</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_7_1775896290214</masterLabel>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <masterLabel>Test Drive Scheduling</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>This topic handles the complete test drive booking process including vehicle selection, dealership finding, slot selection, and booking creation</scope>
+</GenAiPlugin>
