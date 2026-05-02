@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
-    <description>A2 — Takes a customer ZIP code and returns the nearest Electra dealership. Falls back to first available dealer if no ZIP match found.</description>
-    <interviewLabel>FindDealershipByZipCode {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>FindDealershipByZipCode</label>
-    <processMetadataValues>
-        <name>BuilderType</name>
-        <value><stringValue>LightningFlowBuilder</stringValue></value>
-    </processMetadataValues>
-    <processType>AutoLaunchedFlow</processType>
-
-    <!-- ALL assignments grouped -->
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
         <name>Assign_Dealer_Outputs</name>
         <label>Assign Matched Dealer Outputs</label>
@@ -19,27 +10,37 @@
         <assignmentItems>
             <assignToReference>DealerId</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Dealer_By_Zip.Id</elementReference></value>
+            <value>
+                <elementReference>Get_Dealer_By_Zip.Id</elementReference>
+            </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>DealerName</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Dealer_By_Zip.Name</elementReference></value>
+            <value>
+                <elementReference>Get_Dealer_By_Zip.Name</elementReference>
+            </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>DealerAddress</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Dealer_By_Zip.BillingStreet</elementReference></value>
+            <value>
+                <elementReference>Get_Dealer_By_Zip.BillingStreet</elementReference>
+            </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>DealerPhone</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Dealer_By_Zip.Phone</elementReference></value>
+            <value>
+                <elementReference>Get_Dealer_By_Zip.Phone</elementReference>
+            </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>DealerCity</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Dealer_By_Zip.BillingCity</elementReference></value>
+            <value>
+                <elementReference>Get_Dealer_By_Zip.BillingCity</elementReference>
+            </value>
         </assignmentItems>
     </assignments>
     <assignments>
@@ -50,31 +51,39 @@
         <assignmentItems>
             <assignToReference>DealerId</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Fallback_Dealer.Id</elementReference></value>
+            <value>
+                <elementReference>Get_Fallback_Dealer.Id</elementReference>
+            </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>DealerName</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Fallback_Dealer.Name</elementReference></value>
+            <value>
+                <elementReference>Get_Fallback_Dealer.Name</elementReference>
+            </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>DealerAddress</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Fallback_Dealer.BillingStreet</elementReference></value>
+            <value>
+                <elementReference>Get_Fallback_Dealer.BillingStreet</elementReference>
+            </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>DealerPhone</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Fallback_Dealer.Phone</elementReference></value>
+            <value>
+                <elementReference>Get_Fallback_Dealer.Phone</elementReference>
+            </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>DealerCity</assignToReference>
             <operator>Assign</operator>
-            <value><elementReference>Get_Fallback_Dealer.BillingCity</elementReference></value>
+            <value>
+                <elementReference>Get_Fallback_Dealer.BillingCity</elementReference>
+            </value>
         </assignmentItems>
     </assignments>
-
-    <!-- ALL decisions grouped -->
     <decisions>
         <name>Did_We_Find_Dealer</name>
         <label>Was a Dealer Found?</label>
@@ -90,7 +99,9 @@
             <conditions>
                 <leftValueReference>Get_Dealer_By_Zip.Id</leftValueReference>
                 <operator>IsNull</operator>
-                <rightValue><booleanValue>false</booleanValue></rightValue>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
             </conditions>
             <connector>
                 <targetReference>Assign_Dealer_Outputs</targetReference>
@@ -98,22 +109,39 @@
             <label>Yes — Dealer Found</label>
         </rules>
     </decisions>
-
-    <!-- ALL recordLookups grouped -->
+    <description>A2 — Takes a customer ZIP code and returns the nearest Electra dealership. Falls back to first available dealer if no ZIP match found.</description>
+    <environments>Default</environments>
+    <interviewLabel>FindDealershipByZipCode {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>FindDealershipByZipCode</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
     <recordLookups>
         <name>Get_Dealer_By_Zip</name>
         <label>Get Dealer By ZIP Code</label>
         <locationX>176</locationX>
-        <locationY>288</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <locationY>287</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Did_We_Find_Dealer</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Service_Zip_Codes__c</field>
-            <operator>Contains</operator>
-            <value><elementReference>zipCode</elementReference></value>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>zipCode</elementReference>
+            </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>Account</object>
@@ -126,22 +154,22 @@
         <queriedFields>Phone</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
-
-    <!-- Fallback dealer lookup -->
     <recordLookups>
         <name>Get_Fallback_Dealer</name>
         <label>Get Any Available Dealer (Fallback)</label>
         <locationX>440</locationX>
         <locationY>528</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Assign_Fallback_Outputs</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Service_Zip_Codes__c</field>
-            <operator>IsNull</operator>
-            <value><booleanValue>false</booleanValue></value>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>zipCode</elementReference>
+            </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>Account</object>
@@ -154,7 +182,6 @@
         <queriedFields>Phone</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
-
     <start>
         <locationX>50</locationX>
         <locationY>0</locationY>
@@ -163,29 +190,6 @@
         </connector>
     </start>
     <status>Active</status>
-
-    <variables>
-        <name>zipCode</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>true</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-
-    <variables>
-        <name>DealerId</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>true</isOutput>
-    </variables>
-    <variables>
-        <name>DealerName</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>true</isOutput>
-    </variables>
     <variables>
         <name>DealerAddress</name>
         <dataType>String</dataType>
@@ -201,10 +205,31 @@
         <isOutput>true</isOutput>
     </variables>
     <variables>
+        <name>DealerId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>DealerName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
         <name>DealerPhone</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>zipCode</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
     </variables>
 </Flow>
