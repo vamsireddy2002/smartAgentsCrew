@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OTP_Expiry__c</fullName>
+    <description>DateTime after which the current OTP is considered expired. Set to NOW() + 5 minutes when the OTP is generated. The ValidateOTP Flow rejects any OTP where the current time exceeds this value.</description>
+    <label>OTP Expiry</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>DateTime</type>
+</CustomField>

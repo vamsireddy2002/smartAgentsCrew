@@ -1,0 +1,7 @@
+# Salesforce DX ignore rules
+.sf/
+.sfdx/
+coverage/
+node_modules/
+tmp/
+*.log

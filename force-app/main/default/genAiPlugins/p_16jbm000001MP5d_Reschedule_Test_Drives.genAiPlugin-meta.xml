@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>This topic is selected when a customer wants to change the date or time of an already scheduled test drive.</description>
+    <developerName>p_16jbm000001MP5d_Reschedule_Test_Drives</developerName>
+    <genAiFunctions>
+        <functionName>runtime_appointmentbooking__FetchAppointmentInfo</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>runtime_appointmentbooking__GetAvailableSlot</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>sfdc_fieldservice__UpdateApptTimesForFieldService</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>EmployeeCopilot__AnswerQuestionsWithKnowledge</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the customer wants to reschedule a test drive, use runtime_appointmentbooking__FetchAppointmentInfo to retrieve the current appointment details.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Then, use runtime_appointmentbooking__GetAvailableSlot to find new time slots.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Once the customer selects a new time slot, use sfdc_fieldservice__UpdateApptTimesForFieldService to update the appointment.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <masterLabel>Reschedule Test Drives</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only assist with rescheduling existing test drive appointments. This includes retrieving current appointment details and updating the appointment with a new time slot. You cannot create new test drive bookings.</scope>
+</GenAiPlugin>
