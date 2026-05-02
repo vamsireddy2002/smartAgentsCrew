@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Previous_Test_Drive_Date__c</fullName>
-    <label>Previous Test Drive Date</label>
     <description>Stores the original Test_Drive_Date__c value before a reschedule operation. Updated by the RescheduleTestDrive Flow each time the appointment is moved. Provides a historical audit trail of all previous appointment times for this booking.</description>
-    <type>DateTime</type>
+    <label>Previous Test Drive Date</label>
     <required>false</required>
-    <externalId>false</externalId>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
 </CustomField>

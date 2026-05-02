@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>WhatsApp_Opt_In__c</fullName>
-    <label>WhatsApp Opt-In</label>
-    <description>Indicates the customer has consented to receive WhatsApp messages from Electra Cars. Required for TCPA and GDPR compliance. Set to true during the Agentforce booking conversation after explicit disclosure.</description>
-    <type>Checkbox</type>
     <defaultValue>false</defaultValue>
-    <externalId>false</externalId>
+    <description>Indicates the customer has consented to receive WhatsApp messages from Electra Cars. Required for TCPA and GDPR compliance. Set to true during the Agentforce booking conversation after explicit disclosure.</description>
+    <label>WhatsApp Opt-In</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
 </CustomField>

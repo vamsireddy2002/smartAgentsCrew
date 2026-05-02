@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Service_Zip_Codes__c</fullName>
-    <label>Service ZIP Codes</label>
-    <description>A comma-separated or newline-separated list of ZIP codes that this dealership serves. Used by the FindDealershipByZipCode Flow to match a customer's ZIP code to the nearest dealer using a LIKE query. Example: 94105,94107,94109,94110</description>
-    <type>LongTextArea</type>
-    <length>32768</length>
-    <visibleLines>5</visibleLines>
+    <description>A comma-separated or newline-separated list of ZIP codes that this dealership serves. Used by the FindDealershipByZipCode Flow to match a customer&apos;s ZIP code to the nearest dealer using a LIKE query. Example: 94105,94107,94109,94110</description>
     <externalId>false</externalId>
+    <label>Service ZIP Codes</label>
+    <length>215</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>
