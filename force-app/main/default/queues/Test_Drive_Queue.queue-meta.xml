@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Queue xmlns="http://soap.sforce.com/2006/04/metadata">
+    <doesSendEmailToMembers>false</doesSendEmailToMembers>
+    <name>Test Drive Queue</name>
+    <queueMembers>
+        <users>
+            <user>epic.df34e4d5d226@orgfarm.salesforce.com</user>
+        </users>
+    </queueMembers>
+    <queueRoutingConfig>Default_Routing_Configuration_Agentforce_Contact_Center</queueRoutingConfig>
+    <queueSobject>
+        <sobjectType>MessagingSession</sobjectType>
+    </queueSobject>
+</Queue>
