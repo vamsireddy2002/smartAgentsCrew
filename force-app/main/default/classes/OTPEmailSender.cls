@@ -27,11 +27,33 @@ public without sharing class OTPEmailSender {
     public static List<SendResult> sendOtpEmail(List<SendRequest> requests) {
         List<SendResult> results = new List<SendResult>();
 
+        // Resolve an Org-Wide Email Address so that emails sent from contexts
+        // where the running user's address is "noreply@salesforce.com"
+        // (e.g. Agentforce / Einstein Agent User) are not silently dropped.
+        Id oweId = null;
+        try {
+            List<OrgWideEmailAddress> owes = [
+                SELECT Id, Address, DisplayName
+                FROM OrgWideEmailAddress
+                WHERE IsAllowAllProfiles = true
+                ORDER BY CreatedDate ASC
+                LIMIT 1
+            ];
+            if (!owes.isEmpty()) {
+                oweId = owes[0].Id;
+            }
+        } catch (Exception ignore) {
+            // Continue without OWE if query fails; fall back to running-user from address.
+        }
+
         for (SendRequest req : requests) {
             SendResult result = new SendResult();
             try {
                 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
                 mail.setToAddresses(new List<String>{ req.toEmail });
+                if (oweId != null) {
+                    mail.setOrgWideEmailAddressId(oweId);
+                }
                 mail.setSubject('Your Electra Cars Verification Code');
                 String name = String.isBlank(req.customerName) ? 'Customer' : req.customerName;
                 mail.setHtmlBody(
