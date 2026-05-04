@@ -118,11 +118,11 @@ public without sharing class BookingConfirmationEmailSender {
                     '<tr><td style="background:#f5f7fb;"><b>Vehicle Model</b></td><td>' + (String.isBlank(vehicleName) ? '' : vehicleName) + '</td></tr>' +
                     '</table>' +
                     '<p style="margin-top:18px;">Need to reschedule or cancel? Reply to this email or message us on ' +
-                    '<a href="http://wa.me/+14155238886?text=join%20clock-tall" style="color:#25D366;font-weight:bold;text-decoration:none;">WhatsApp</a> ' +
+                    '<a href="https://wa.me/14155238886?text=join%20clock-tall" style="color:#25D366;font-weight:bold;text-decoration:underline;">WhatsApp</a> ' +
                     'with your booking id <b>' + bookingName + '</b>.</p>' +
                     '<p style="margin-top:8px;font-size:13px;color:#555;">' +
                     'New to our WhatsApp assistant? ' +
-                    '<a href="http://wa.me/+14155238886?text=join%20clock-tall" style="color:#0a4cb3;">Tap here to start chatting</a> — ' +
+                    '<a href="https://wa.me/14155238886?text=join%20clock-tall" style="color:#0a4cb3;text-decoration:underline;">Tap here to start chatting</a> — ' +
                     'it will pre-fill the join code for you.</p>' +
                     '<p>— Electra Cars Team</p>' +
                     '</div>';

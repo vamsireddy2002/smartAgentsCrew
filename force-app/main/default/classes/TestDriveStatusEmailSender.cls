@@ -161,11 +161,11 @@ public without sharing class TestDriveStatusEmailSender {
                     '</table>' +
                     '<p style="margin-top:18px;">Need help or want to ' +
                     (isCancel ? 'book again' : 'change again') + '? ' +
-                    'Message us on <a href="https://wa.me/+14155238886?text=' + waText + '" style="color:#25D366;font-weight:bold;text-decoration:none;">WhatsApp</a> ' +
+                    'Message us on <a href="https://wa.me/14155238886?text=' + waText + '" style="color:#25D366;font-weight:bold;text-decoration:underline;">WhatsApp</a> ' +
                     'with your booking id <b>' + td.Name + '</b>.</p>' +
                     '<p style="margin-top:8px;font-size:13px;color:#555;">' +
                     'New to our WhatsApp assistant? ' +
-                    '<a href="https://wa.me/+14155238886?text=' + waText + '" style="color:#0a4cb3;">Tap here to start chatting</a>.' +
+                    '<a href="https://wa.me/14155238886?text=' + waText + '" style="color:#0a4cb3;text-decoration:underline;">Tap here to start chatting</a>.' +
                     '</p>' +
                     '<p>— Electra Cars Team</p>' +
                     '</div>';
