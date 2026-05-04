@@ -2,6 +2,34 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <actionCalls>
+        <name>Send_Reschedule_Email</name>
+        <label>Send Reschedule Email to Customer</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <actionName>TestDriveStatusEmailSender</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Set_Success</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Success</targetReference>
+        </faultConnector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>testDriveId</name>
+            <value>
+                <elementReference>Get_Test_Drive.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailType</name>
+            <value>
+                <stringValue>Reschedule</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
     <assignments>
         <name>Set_Failure</name>
         <label>Set Failure Output</label>
@@ -143,7 +171,7 @@
         <locationX>176</locationX>
         <locationY>200</locationY>
         <connector>
-            <targetReference>Set_Success</targetReference>
+            <targetReference>Send_Reschedule_Email</targetReference>
         </connector>
         <faultConnector>
             <targetReference>Set_Failure</targetReference>
@@ -190,7 +218,7 @@
             <targetReference>Get_Test_Drive</targetReference>
         </connector>
     </start>
-    <status>Active</status>
+    <status>Draft</status>
     <variables>
         <description>The customer-facing booking number for the test drive, in the format TD-XXXXX (e.g. TD-00009). This is what the customer reads off their confirmation. Do NOT pass a Salesforce record ID, a Vehicle Definition ID, a Lead ID, or any 15/18-character alphanumeric ID here. Pass only the human-readable TD-XXXXX value.</description>
         <name>bookingNumber</name>
