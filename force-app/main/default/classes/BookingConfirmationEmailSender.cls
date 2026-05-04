@@ -61,7 +61,8 @@ public without sharing class BookingConfirmationEmailSender {
             // Fall through; running user's address will be used.
         }
 
-        // Bulk-fetch TestDrive Names so we can include the human-readable booking number (TD-XXXXX).
+        // Bulk-fetch TestDrive Names so we can include the human-readable booking number (TD-XXXXX)
+        // and the related VehicleDefinition.Name (lookup via Vehicle_Definition__c).
         Set<Id> tdIds = new Set<Id>();
         for (Request r : requests) {
             if (r != null && r.testDriveId != null) {
@@ -70,7 +71,11 @@ public without sharing class BookingConfirmationEmailSender {
         }
         Map<Id, TestDrive__c> tdMap = new Map<Id, TestDrive__c>();
         if (!tdIds.isEmpty()) {
-            tdMap.putAll([SELECT Id, Name FROM TestDrive__c WHERE Id IN :tdIds]);
+            tdMap.putAll([
+                SELECT Id, Name, Vehicle_Definition__c, Vehicle_Definition__r.Name
+                FROM TestDrive__c
+                WHERE Id IN :tdIds
+            ]);
         }
 
         List<Messaging.SingleEmailMessage> toSend = new List<Messaging.SingleEmailMessage>();
@@ -83,6 +88,15 @@ public without sharing class BookingConfirmationEmailSender {
                     ? tdMap.get(req.testDriveId).Name
                     : String.valueOf(req.testDriveId);
                 res.bookingNumber = bookingName;
+
+                // Prefer the VehicleDefinition.Name from the TestDrive lookup; fall back to the input.
+                String vehicleName = req.vehicleModel;
+                if (req.testDriveId != null && tdMap.containsKey(req.testDriveId)) {
+                    TestDrive__c td = tdMap.get(req.testDriveId);
+                    if (td.Vehicle_Definition__r != null && String.isNotBlank(td.Vehicle_Definition__r.Name)) {
+                        vehicleName = td.Vehicle_Definition__r.Name;
+                    }
+                }
 
                 String displayName = String.isBlank(req.customerName) ? 'Customer' : req.customerName;
                 String whenStr = req.preferredDateTime == null
@@ -101,9 +115,15 @@ public without sharing class BookingConfirmationEmailSender {
                     '<tr><td style="background:#f5f7fb;"><b>Phone</b></td><td>' + (String.isBlank(req.customerPhone) ? '' : req.customerPhone) + '</td></tr>' +
                     '<tr><td style="background:#f5f7fb;"><b>Preferred Date &amp; Time</b></td><td>' + whenStr + '</td></tr>' +
                     '<tr><td style="background:#f5f7fb;"><b>ZIP Code</b></td><td>' + (String.isBlank(req.zipCode) ? '' : req.zipCode) + '</td></tr>' +
-                    '<tr><td style="background:#f5f7fb;"><b>Vehicle Model</b></td><td>' + (String.isBlank(req.vehicleModel) ? '' : req.vehicleModel) + '</td></tr>' +
+                    '<tr><td style="background:#f5f7fb;"><b>Vehicle Model</b></td><td>' + (String.isBlank(vehicleName) ? '' : vehicleName) + '</td></tr>' +
                     '</table>' +
-                    '<p style="margin-top:18px;">Need to reschedule or cancel? Reply to this email or message us on WhatsApp with your booking id <b>' + bookingName + '</b>.</p>' +
+                    '<p style="margin-top:18px;">Need to reschedule or cancel? Reply to this email or message us on ' +
+                    '<a href="http://wa.me/+14155238886?text=join%20clock-tall" style="color:#25D366;font-weight:bold;text-decoration:none;">WhatsApp</a> ' +
+                    'with your booking id <b>' + bookingName + '</b>.</p>' +
+                    '<p style="margin-top:8px;font-size:13px;color:#555;">' +
+                    'New to our WhatsApp assistant? ' +
+                    '<a href="http://wa.me/+14155238886?text=join%20clock-tall" style="color:#0a4cb3;">Tap here to start chatting</a> — ' +
+                    'it will pre-fill the join code for you.</p>' +
                     '<p>— Electra Cars Team</p>' +
                     '</div>';
 
